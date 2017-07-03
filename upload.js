@@ -59,10 +59,9 @@ function fileUpload(param) {
 
             var button = typeof option.uploadId === 'string' ? document.getElementById(option.uploadId) : option.uploadId;
 
-            var uploader = new qq.FineUploaderBasic({
+            new qq.FineUploaderBasic({
                 request: {
                     endpoint: option.webFilePath + '/upload.do?action=upload',
-                    // endpoint: '/upload.do?action=upload',
 					params: {
 						'moduleFlag': 'report',
 						'token': token,
@@ -108,16 +107,16 @@ function fileUpload(param) {
                 callbacks: {
 
                     onError: function() {
-						console.log('=============onError', arguments)
+						qq.log('=============onError', arguments)
                     },
                     onSubmitted: function(id, name) {
-						console.log('=============onSubmitted', arguments)
+						qq.log('=============onSubmitted', arguments)
                         var queueID = id;
                         var fileObj = this.getFile(id) || {
                                 name: this.getName(id),
                                 size: this.getSize(id)
                             };
-                        console.log(fileObj)
+                        qq.log(fileObj)
 
 
                         if (isFunction(option.onSelect)) {
@@ -166,7 +165,7 @@ function fileUpload(param) {
                      * The object used to make the request.
                      */
                     onComplete: function(id, name, responseJSON, xhr) {
-                        console.log('=============onComplete', arguments)
+                        qq.log('=============onComplete', arguments)
                         var obj = responseJSON;
 
 
@@ -177,14 +176,10 @@ function fileUpload(param) {
                             function(data) {
                                 var callback = option.callback;
 
-
-                                $(button).
-                                    // parent().
-                                    siblings('.poptip').
-                                    remove();
-                                $(button).
-                                    // parent().
-                                    removeClass('red-border');
+                                $(button).siblings('.poptip')
+                                    .remove()
+                                    .end()
+                                    .removeClass('red-border');
                                 var obj = eval('(' + data + ')');
                                 obj.size = _fileObj.size;
                                 obj.type = _fileObj.type;
@@ -223,7 +218,7 @@ function fileUpload(param) {
                             });
                     },
                     onUpload: function() {
-                        console.log('=============onUpload', arguments)
+                        qq.log('=============onUpload', arguments)
                     }
 				}
 			});
