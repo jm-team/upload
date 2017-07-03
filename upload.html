@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <!-- 版本号，每次升级需要修改为对应的版本号，避免缓存造成样式问题 -->
+  <link rel="stylesheet" href="http://lg-center-static.jm.com/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://lg-center-static.jm.com/static/css/common.css?v=1.8.2">
+  <link rel="stylesheet" href="http://lg-center-static.jm.com/static/css/layer.css">
+
+  <script src="http://lg-center-static.jm.com/static/js/jquery/jquery-1.11.3.min.js"></script>
+  <script src="http://lg-center-static.jm.com/static/js/layer/layer.js"></script>
+
+
+
+  <!-- uploadify start -->
+  <script type="text/javascript">
+    var fileViewAddress = 'http://image.jm.com';
+    var fileUploadAddress = 'http://image5.jm.com';
+    var staticUrl = 'http://lg-center-static.jm.com';
+  </script>
+  <link rel="stylesheet" href="http://lg-center-static.jm.com/static/js/upload/upload.css"/>
+  <script src="./fine-uploader.core.js"></script>
+  <script src="./upload.js"></script>
+  <!-- uploadify end -->
+
+  <script type="text/javascript">
+
+    //单张图片显示
+    function showImageMain(imgSrc) {
+      // 显示完整大图
+      imgSrc = getFileViewUrl(imgSrc, false);
+      if (imgSrc) {
+        var img = new Image();
+        img.src = imgSrc;
+        var layero = parent.layer ? parent.layer : layer;
+        img.onload = function(){
+          var wWidth = window.innerWidth * 0.9,wHeight = window.innerHeight * 0.9,width = img.width,height = img.height;
+          var scaleMaxWidth = 1;
+          var scaleMaxHeight = 1;
+          if(img.width > wWidth){
+            scaleMaxWidth = wWidth / img.width;
+          }
+          if(img.height > wHeight){
+            scaleMaxHeight = wHeight / img.height;
+          }
+          var maxScale = Math.min(scaleMaxWidth,scaleMaxHeight);
+          var area = [maxScale * width + 'px', maxScale * height + 'px'];
+          layero.open({
+            type: 1,
+            title: false,
+            closeBtn: 1,
+            area:area,
+            skin: 'popimg-box', //没有背景色
+            shadeClose: true,
+            content: '<img style="" src='+imgSrc+' />'
+          });
+        };
+        img.onerror = function (e) {
+          layero.msg('图片不存在',{time:1000});
+        }
+      }
+    }
+
+    $(function() {
+      //图片查看
+      $("body").on("click",".show-pic",function (e) {
+        var srcStr  =  $(this).parent('.change-pic').siblings('img').attr('src');
+        showImageMain(srcStr);
+      });
+    });
+  </script>
+  <style>
+    input.file-btn, #uploadifyText {
+      display: none;
+    }
+    input[name=qqfile] {
+      display: block !important;
+      background: #11b95c;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="editor-box" style="width:40%">
+  <div class="form-module">
+    <!-- 上传图片 -->
+    <div class="box-header clearfix">
+      <h3 class="title">上传指定数量图片</h3>
+    </div>
+    <div class="form-main">
+      <form id="uploadForm1" class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2">上传图片</label>
+          <div class="col-sm-10 p-t-sm">
+            <!-- 注意 ，很重要，a标签id名称与type=file的id与name=uploadFile有严格要求 -->
+            <span class="image-upload-wrap">
+								<a class="image-upload" id="uploadFile_head" validate="required">
+									<input type="file" class="file-btn" id="uploadFile"/>
+									<input type="hidden" name="uploadFile"/>
+								</a>
+								营业执照
+						    </span>
+            <span class="image-upload-wrap">
+								<a class="image-upload" id="uploadFile1_head">
+									<input type="file" class="file-btn" id="uploadFile1"/>
+									<input type="hidden" name="uploadFile1"/>
+								</a>
+								营业执照编辑
+						    </span>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- 上传文件 -->
+    <div class="box-header clearfix">
+      <h3 class="title">上传文件</h3>
+    </div>
+    <div class="form-main">
+      <form id="uploadForm2" class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2">上传文件</label>
+          <div class="col-sm-10 p-t-sm">
+            <div class="input-group file-upload-wrap">
+              <input type="text" class="form-control" readonly placeholder="请上传doc docx pdf格式的文件"/>
+              <a id="uploadifyTextWrap" class="btn btn-primary btn-block file-upload input-group-addon"><input type="file" id="uploadifyText"/>选择文件</a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- 上传多张图片 -->
+    <div class="box-header clearfix">
+      <h3 class="title">上传多张图片</h3>
+    </div>
+    <div class="form-main">
+      <form id="uploadForm3" class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2">上传图片</label>
+          <div class="col-sm-10 p-t-sm image-upload-group" data-max="5">
+            <!-- 注意 ，很重要，a标签id名称与type=file的id与name=uploadFile有严格要求 -->
+            <span class="image-upload-wrap">
+								<a class="image-upload" id="uploadFile2_head">
+									<input type="file" class="file-btn" id="uploadFile2"/>
+									<input type="hidden" name="uploadFile2"/>
+								</a>
+						    </span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+
+<script type="text/javascript">
+  $(function(){
+    //上传图片控件
+    showImage('uploadFile', null, {
+      showClear: true, // 显示编辑按钮
+      callback: function(data, params) {
+        layer.alert('编辑成功回调');
+      }
+    });
+
+    //编辑图片控件 ，3个参数
+    //param2:string 上传组件id
+    //param1:对象，filePaths图片路径(数组)，originalFileNames文件名称(数组)
+    //param3:其它配置，参考upload.js
+    var data = {
+      filePaths: ["/newupload/www.jmdev.com/PC/2016/12/16/15/57/01/d625bdc87ba6ddf0-jm.jpg"],
+      originalFileNames: ["真实文件名"]
+    }
+    showImage('uploadFile1', data, {
+      showEdit: true, // 显示编辑按钮
+      showClear:true,
+      callback: function(data, params) {
+        layer.alert('编辑成功回调');
+      }
+    });
+
+    //上传图片控件
+    showImage('uploadFile2', null, {
+      showDel: true,
+//      editable:false,
+      fileMulti: true,
+      editable: true,
+      max: 3
+    });
+
+    //上传文件
+    fileUpload({
+      uploadId : "uploadifyTextWrap",//组件id
+      fileType : "doc",//文件类型
+      callback : function(data){
+        var imagePath = data.filePaths[0];
+        var realName = data.originalFileNames[0];
+        var inputText = $("#uploadifyText").closest('.file-upload-wrap').find('input:text');
+        inputText.val(realName);
+        inputText.attr('filePath', imagePath);
+      }
+    });
+  });
+
+</script>
+
+</body>
+
+
+</html>
