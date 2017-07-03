@@ -42,7 +42,9 @@ function fileUpload(param) {
         maxImageSize: 200,
         fileExt: null,
         callback: function() {},
-        onSelect: function() {}
+        onSelect: function() {},
+        // 新插件参数
+        fileInputTitle: '请选择'
     };
 
     var option = $.extend({}, defaults, param);
@@ -77,6 +79,9 @@ function fileUpload(param) {
                 button: button,
                 // element: document.getElementById(option.uploadId),
                 multiple: option.fileMulti,
+                text: {
+                    fileInputTitle: option.fileInputTitle
+                },
                 display: {
                     prependFiles: true
                 },
@@ -281,7 +286,7 @@ var IMAGE_DEFAULTS = {
 };
 /**
  * 显示图片
- * 
+ *
  * @param id file控件的id
  * @param data 图片信息，{filePaths: ["xxx.jpg"], originalFileNames: ["文件名"]}
  * @param 参数，参考IMAGE_DEFAULTS
@@ -298,7 +303,7 @@ function showImage(id, data, params){
 	max = options.max,
 	callback = options.callback,
 	btns = options.btns;
-	
+
 	// 当前没有图片，直接初始化图片上传组件
 	if(!data || !data.filePaths || data.filePaths.length==0 || !data.filePaths[0] || data.filePaths[0].indexOf('no_available_url') > 0) {
 		if(editable) {
@@ -315,13 +320,13 @@ function showImage(id, data, params){
 		}
 		return;
 	}
-	
+
 	if(!editable) {
 		showDel = options.showDel = false;
 		showEdit = options.showEdit = false;
 		max = options.max = 1;
 	}
-	
+
 	$(this).remove();
 	var imagePath = data.filePaths[0];
 	var realName = data.originalFileNames ? data.originalFileNames[0] : '';
@@ -379,7 +384,7 @@ function showImage(id, data, params){
 	    if(max > 1 && parent.find('.image-upload-wrap').length < max) {
 	    	showImage2(parent, max, inputHidden.attr('name'));
 	    }
-	    
+
 	    inputHidden.val(imagePath)
 	}else{
 		fileUpload({
@@ -461,7 +466,7 @@ function showImage2(appendComponent, max, name, fileMulti) {
 
 /**
  * 获取图片的完整路径
- * 
+ *
  * @param url 可以是完整路径也可以是图片服务器的相对路径
  * @param reduce true表示需要压缩，false表示不需要压缩
  * <font color="red"><p>注意只有上传时设置了maxImageSize的图片才可以压缩</p></font>
