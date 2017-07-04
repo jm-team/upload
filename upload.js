@@ -57,7 +57,9 @@ function fileUpload(param) {
             token = obj.uploadToken;
             domain = obj.domain;
 
-            var button = typeof option.uploadId === 'string' ? document.getElementById(option.uploadId) : option.uploadId;
+            var button = typeof option.uploadId === 'string'
+                ? document.getElementById(option.uploadId)
+                : option.uploadId;
 
             new qq.FineUploaderBasic({
                 request: {
@@ -79,71 +81,66 @@ function fileUpload(param) {
                 // element: document.getElementById(option.uploadId),
                 multiple: option.fileMulti,
                 text: {
-                    fileInputTitle: option.fileInputTitle
+                    fileInputTitle: option.fileInputTitle,
                 },
                 display: {
-                    prependFiles: true
+                    prependFiles: true,
                 },
-
                 failedUploadTextDisplay: {
-                    mode: "custom"
+                    mode: 'custom',
                 },
-
                 retry: {
-                    enableAuto: false
+                    enableAuto: false,
                 },
-
                 chunking: {
-                    enabled: false
+                    enabled: false,
                 },
                 cors: {
                     allowXdr: true,
-                    expected: true
+                    expected: true,
                     // sendCredentials: true
                 },
                 resume: {
-                    enabled: false
+                    enabled: false,
                 },
                 callbacks: {
-
                     onError: function() {
-						qq.log('=============onError', arguments)
+                        qq.log('=============onError', arguments);
                     },
                     onSubmitted: function(id, name) {
-						qq.log('=============onSubmitted', arguments)
+                        qq.log('=============onSubmitted', arguments);
                         var queueID = id;
                         var fileObj = this.getFile(id) || {
                                 name: this.getName(id),
-                                size: this.getSize(id)
+                                size: this.getSize(id),
                             };
-                        qq.log(fileObj)
+                        qq.log(fileObj);
 
-
-                        if (isFunction(option.onSelect)) {
-                            var s = option.onSelect(event, queueID, fileObj);
-                            if (s == false)
-                                return false;
-                        }
                         _fileObj.size = fileObj.size;
                         _fileObj.type = '.' + fileObj.name.split('.').pop();
+
+                        if (isFunction(option.onSelect)) {
+                            var s = option.onSelect(this, queueID, fileObj);
+
+                            if (s == false) {
+                                return false;
+                            }
+                        }
+
                         if ($('.file-item').find('p').length >= 5) {
-                            layer.alert('Maximum allowed upload 5 attached',
-                                { icon: 2 });
-                            layer.alert("上传的文件个数不得超过5个", {icon: 2});
-                            // $('#' + option.uploadId).uploadifyCancel(queueID);
+                            layer.alert('Maximum allowed upload 5 attached', { icon: 2 });
+                            layer.alert('上传的文件个数不得超过5个', { icon: 2 });
                             this.cancel(id);
                             return false;
                         }
 
                         if (fileObj.size > option.fileSize * 1024 * 1024) {
                             layer.alert('上传文件不允许大于' + option.fileSize + 'M', { icon: 2 });
-                            // $('#' + option.uploadId).uploadifyCancel(queueID);
                             this.cancel(id);
                             return false;
                         }
 
-                        if (!validateFileType(fileObj, param)) {
-                            // $('#' + option.uploadId).uploadifyCancel(queueID);
+                        if (!validateFileType(fileObj, option)) {
                             this.cancel(id);
                             return false;
                         }
@@ -165,10 +162,8 @@ function fileUpload(param) {
                      * The object used to make the request.
                      */
                     onComplete: function(id, name, responseJSON, xhr) {
-                        qq.log('=============onComplete', arguments)
+                        qq.log('=============onComplete', arguments);
                         var obj = responseJSON;
-
-
 
                         $.cookie('JSESSIONID', token);//跨域传输之后必须设置cookie 否则会丢失此次的session
                         // var obj = eval('(' + _path + ')');
@@ -176,10 +171,11 @@ function fileUpload(param) {
                             function(data) {
                                 var callback = option.callback;
 
-                                $(button).siblings('.poptip')
-                                    .remove()
-                                    .end()
-                                    .removeClass('red-border');
+                                $(button).
+                                    siblings('.poptip').
+                                    remove().
+                                    end().
+                                    removeClass('red-border');
                                 var obj = eval('(' + data + ')');
                                 obj.size = _fileObj.size;
                                 obj.type = _fileObj.type;
@@ -196,29 +192,24 @@ function fileUpload(param) {
                                     callback(obj);
                                 } else {
                                     //判断是否是图片格式
-                                    if (!$.inArray(obj.type,
-                                            UPLOAD_FILE_TYPE_INFO['image']) >= 0) {
+                                    if (!$.inArray(obj.type, UPLOAD_FILE_TYPE_INFO['image']) >= 0) {
                                         if (obj && obj.resultCode == 4) {
                                             var filePaths = obj.filePaths;//文件查看路径
                                             var originalFileNames = obj.originalFileNames;//原文件名
-//    					        			var savePaths = obj.savePaths;//文件存储路径
-                                            for (var i = 0; i <
-                                            filePaths.length; i++) {
-                                                $('#' + option.imgId).
-                                                    attr('src', option.webFilePath + '/' +
-                                                        filePaths[i]);
-                                                $('#' + option.filePathId).
-                                                    val(filePaths[i]);
+
+                                            for (var i = 0; i < filePaths.length; i++) {
+                                                $('#' + option.imgId).attr('src', option.webFilePath + '/' + filePaths[i]);
+                                                $('#' + option.filePathId).val(filePaths[i]);
                                             }
                                         } else {
-                                            alert(url.resultMsg);
+                                            layer.alert(obj.resultMsg, { icon: 2 });
                                         }
                                     }
                                 }
                             });
                     },
                     onUpload: function() {
-                        qq.log('=============onUpload', arguments)
+                        qq.log('=============onUpload', arguments);
                     }
 				}
 			});
