@@ -30,19 +30,20 @@ function fileUpload(param) {
         filePathId: '',
         webFilePath: fileUploadAddress,
         fileType: 'image',
-        fileQueue: 'fileQueue',
         fileSize: 5,
         ifyWidth: 50,
         ifyHeight: 31,
         buttonImg: staticUrl + '/static/img/upload-bg.png',
         fileQueueAuto: true,
-        queueSizeLimit: 6,
         fileMulti: false,
-        simUploadLimit: 1,
         maxImageSize: 200,
         fileExt: null,
         callback: function() {},
         onSelect: function() {},
+        // 弃用api
+        fileQueue: 'fileQueue',
+        queueSizeLimit: 6,
+        simUploadLimit: 1,
         // 新插件参数
         fileInputTitle: '请选择'
     };
