@@ -30,6 +30,7 @@ function fileUpload(param) {
         imgId: '',
         filePathId: '',
         webFilePath: window.WEB_FILE_PATH || '',
+        webViewPath: window.WEB_VIEW_PATH || '',
         fileType: 'image',
         fileSize: 5,
         ifyWidth: 50,
@@ -202,7 +203,7 @@ function fileUpload(param) {
                                         var filePaths = obj.filePaths;//文件查看路径
 
                                         for (var i = 0; i < filePaths.length; i++) {
-                                            $('#' + option.imgId).attr('src', option.webFilePath + '/' + filePaths[i]);
+                                            $('#' + option.imgId).attr('src', option.webViewPath + '/' + filePaths[i]);
                                             $('#' + option.filePathId).val(filePaths[i]);
                                         }
                                     } else {
