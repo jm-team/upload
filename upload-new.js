@@ -139,18 +139,15 @@ function fileUpload(param) {
                         if ($('.file-item').find('p').length >= 5) {
                             // layer.alert('Maximum allowed upload 5 attached', { icon: 2 });
                             layer.alert('上传的文件个数不得超过5个', { icon: 2 });
-                            this.cancel(id);
                             return false;
                         }
 
                         if (fileObj.size > option.fileSize * 1024 * 1024) {
                             layer.alert('上传文件不允许大于' + option.fileSize + 'M', { icon: 2 });
-                            this.cancel(id);
                             return false;
                         }
 
                         if (!validateFileType(fileObj, option)) {
-                            this.cancel(id);
                             return false;
                         }
 
