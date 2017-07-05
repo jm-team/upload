@@ -168,6 +168,10 @@
         showImage('uploadFile', null, {
             showClear: true, // 显示编辑按钮
             callback: function(data, params) {
+                $('#uploadFile').parent().
+                    removeClass('red-border').
+                    siblings('.poptip').
+                    remove();
                 layer.alert('编辑成功回调');
             },
         });

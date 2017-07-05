@@ -173,16 +173,11 @@ function fileUpload(param) {
                         var obj = responseJSON;
 
                         $.cookie('JSESSIONID', token);//跨域传输之后必须设置cookie 否则会丢失此次的session
-                        // var obj = eval('(' + _path + ')');
+
                         $.getJSON('/getFile?uuid=' + obj.fileUUIDs[0], function(data) {
                             var callback = option.callback;
+                            var obj = JSON.parse(data);
 
-                            $(button).
-                                siblings('.poptip').
-                                remove().
-                                end().
-                                removeClass('red-border');
-                            var obj = eval('(' + data + ')');
                             obj.size = _fileObj.size;
                             obj.type = _fileObj.type;
                             obj.imgId = option.imgId;
