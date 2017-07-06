@@ -26,14 +26,15 @@
 
 | Option | Type | Description |
 |----:|:-------:|:-------|
+|fileInputTitle| 新增 | 按钮title |
+|uploadId      | 修改 | Id或HTMLElement |
+|webFilePath   | 修改 | 默认读取全局常量 WEB_FILE_PATH，用于统一配置上传服务器地址，不需要每次都传了，也可继续传参覆盖。 |
+|webViewPath   | 修改 | 默认读取全局常量 WEB_VIEW_PATH，用于统一配置查看图片服务器地址。 |
+|onSelect()    | 修改 | fine-uploader所有回调参数不带event对象，如原先的`onSelect(event, queueID, fileObj)`，将获取不到`event`对象，该参数改为控件的实例。 |
 |buttonImg     | 弃用 | 按钮样式由用户定义 |
 |fileQueue     | 弃用 | 文件上传队列容器，没有交互需求 |
 |queueSizeLimit| 弃用 | 文件上传队列限制 |
 |simUploadLimit| 弃用 | 接口一次只提交一个文件 |
-|webFilePath   | 修改 | 默认读取全局常量 WEB_FILE_PATH，用于统一配置上传服务器地址，不需要每次都传了，也可继续传参覆盖。 |
-|webViewPath   | 修改 | 默认读取全局常量 WEB_VIEW_PATH，用于统一配置查看图片服务器地址。 |
-|onSelect()    | 修改 | fine-uploader所有回调参数不带event对象，如原先的`onSelect(event, queueID, fileObj)`，将获取不到`event`对象，该参数改为控件的实例。 |
-|fileInputTitle| 新增 | 按钮title |
 
 ### 注意细节
 
