@@ -5,7 +5,7 @@
 
 ### 文件引用 
 
-1. 附件获取以下js
+1. 从附件获取以下js文件
  - fine-uploader.core.js
  - upload.js
 
@@ -19,15 +19,15 @@
 <script src="http://image5.jm.com/dsw/js/upload.js"></script>
 <!-- uploadify end -->
 ```
-3. 不包含上传功能以外的交互，交互及按钮样式等都由各平台根据设计自行实现。
+3. Core版不包含上传功能以外的样式、交互，交互及按钮样式等都由各平台根据设计自行实现。
 
 
 ### API变动  
 
 | Option | Type | Description |
-|----:|:-------:|:-------|
-|fileInputTitle| 新增 | 按钮title |
-|uploadId      | 修改 | Id或HTMLElement |
+|-------:|:----:|:------------|
+|fileInputTitle| 新增 | 按钮title, 默认为“请选择” 。|
+|uploadId      | 修改 | Id或HTMLElement，如果是input自动使用其父元素，不能为行内元素。 |
 |webFilePath   | 修改 | 默认读取全局常量 WEB_FILE_PATH，用于统一配置上传服务器地址，不需要每次都传了，也可继续传参覆盖。 |
 |webViewPath   | 修改 | 默认读取全局常量 WEB_VIEW_PATH，用于统一配置查看图片服务器地址。 |
 |onSelect()    | 修改 | fine-uploader所有回调参数不带event对象，如原先的`onSelect(event, queueID, fileObj)`，将获取不到`event`对象，该参数改为控件的实例。 |
@@ -39,9 +39,10 @@
 
 ### 注意细节
 
- - fileUpload()初始化控件方式不变, 但`uploadId`改为包装上传按钮的**父容器（块级元素）**，不能为input等自闭合标签。 （考虑到老控件一直以input作为uploadId，已添加判断：如果uploadId是input元素就使用他的父容器作为上传按钮）
- - `uploadId`为行内元素（span，em，a）时，overflow会失效，导致按钮超出容器，遮罩住其他元素。务必设置元素样式`display: block`或者`display: inline-block`。
+ - fileUpload(options)调用方式不变, 但`uploadId`改为包装上传按钮的**父容器（块元素）**，不能为input等自闭合标签（行内元素）。（考虑到老控件一直以input作为uploadId，已添加判断：如果uploadId是input元素就使用他的父容器作为上传按钮）
+ - `uploadId`为行内元素（span，em，a）时，overflow会失效，导致按钮超出容器，遮罩住其他元素。请务必设置元素样式`display: block`或者`display: inline-block`。
  - 选择文件回调`onSelect(this, queueID, fileObj)` 第一个参数改为返回当前上传控件实例。
- - 回调参数fileObj对象在ie8、9下无法获取文件大小，`fileObj.size = -1`，导致前端校验失效。
- - 实例包含大量方法提供用户调用，如取消上传, 获取其他属性。详细文档[https://docs.fineuploader.com](https://docs.fineuploader.com/branch/master/api/methods.html)
- - 查看api时请注意，目前只使用了fine-uploader的CORE版，未包含UI功能模块。
+ - 回调参数`fileObj`对象在ie8、9下无法获取文件大小，`fileObj.size = -1`，将导致前端校验失效。
+ - 实例包含大量方法提供用户调用，如：取消上传、 获取其他属性。详细文档[https://docs.fineuploader.com](https://docs.fineuploader.com/branch/master/api/methods.html)
+ - 查看api时请注意，目前使用fine-uploader的CORE版，未包含UI功能模块。
+ - 请勿使用官方的min版，因为该插件的压缩版在IE8下报错（uglify-js 2.7+ 默认不兼容IE8），如有需求可使用其他工具自行压缩。
