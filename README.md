@@ -39,7 +39,7 @@
 ### 注意细节
 
  - fileUpload()初始化控件方式不变, 但`uploadId`改为包装上传按钮的**父容器（块级元素）**，不能为input等自闭合标签。 （考虑到老控件一直以input作为uploadId，已添加判断：如果uploadId是input元素就使用他的父容器作为上传按钮）
- - `uploadId`为行内元素（span，em，a）时，会导致按钮超出容器的Bug，务必设置元素样式`display: block`。
+ - `uploadId`为行内元素（span，em，a）时，overflow失效，会导致按钮超出容器的Bug，务必设置元素样式`display: block`或者`display: inline-block`。
  - 选择文件回调`onSelect(this, queueID, fileObj)` 第一个参数改为返回当前上传控件实例。
  - 回调参数fileObj对象在ie8、9下无法获取文件大小，`fileObj.size = -1`，导致前端校验失效。
  - 实例包含大量方法提供用户调用，如取消上传, 获取其他属性。详细文档[https://docs.fineuploader.com](https://docs.fineuploader.com/branch/master/api/methods.html)
