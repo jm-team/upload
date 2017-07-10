@@ -117,7 +117,7 @@ function fileUpload(param) {
                     onError: function() {
                         qq.log('=============onError', arguments);
                     },
-                    onSubmitted: function(id, name) {
+                    onSubmit: function(id, name) {
                         qq.log('=============onSubmitted', arguments);
                         var queueID = id;
                         var fileObj = this.getFile(id) || {
