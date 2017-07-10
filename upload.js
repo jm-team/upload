@@ -117,8 +117,9 @@ function fileUpload(param) {
                     onError: function() {
                         qq.log('=============onError', arguments);
                     },
+                    // return false 不触发 onSubmitted 回调
                     onSubmit: function(id, name) {
-                        qq.log('=============onSubmitted', arguments);
+                        qq.log('=============onSubmit', arguments);
                         var queueID = id;
                         var fileObj = this.getFile(id) || {
                                 name: this.getName(id),
