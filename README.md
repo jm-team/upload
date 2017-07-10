@@ -31,11 +31,11 @@
 |watermarkImage  | 新增 | 提供水印图片的URL（watermarkImage）。上传后水印图片将出现在图片的中央。 |
 |fileInputTitle  | 新增 | 按钮title, 默认为“请选择” 。 |
 |uploadId        | 修改 | Id或HTMLElement，如果是input自动使用其父元素，不能为行内元素。 |
-|fileExt         | 修改 | .gif,.jpg,.png 逗号`,`拼接,`.` + `文件后缀` |
+|fileExt         | 修改 | 替换`fileTypeExts`，格式为`.gif,.jpg,.png` |
 |webFilePath     | 修改 | 默认读取全局常量 WEB_FILE_PATH，用于统一配置上传服务器地址，不需要每次都传了，也可继续传参覆盖。 |
 |webViewPath     | 修改 | 默认读取全局常量 WEB_VIEW_PATH，用于统一配置查看图片服务器地址。 |
 |onSelect()      | 修改 | fine-uploader所有回调参数不带event对象，如原先的`onSelect(event, queueID, fileObj)`，将获取不到`event`对象，该参数改为控件的实例。 |
-|callback()      | 修改 | `callback(status,localFile, resp)`从3个参数改为一个`callback(resp)`对象,包含文件类型`.` + `文件后缀`, resp对象不需要再次parse了~~var resp = $.parseJSON(resp);~~ |
+|callback()      | 修改 | `callback(resp)`从3个参数改为一个`resp`对象,包含文件类型`.` + `文件后缀`, 注意resp对象不需要再次parse了~~var resp = $.parseJSON(resp);~~ |
 |buttonImg       | 弃用 | 按钮样式由用户定义 |
 |fileQueue       | 弃用 | 文件上传队列容器，没有交互需求 |
 |queueSizeLimit  | 弃用 | 文件上传队列限制 |
