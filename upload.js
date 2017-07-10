@@ -47,6 +47,9 @@ function fileUpload(param) {
         queueSizeLimit: 6,
         simUploadLimit: 1,
         // 新插件参数
+        defaultWatermark: false, // 默认水印开关（"defaultWatermark":true）。上传后默认水印将出现在图片的中央
+        watermarkText: '', // 提供水印文字（watermarkText）。上传后水印文字将出现在图片的正中
+        watermarkImage: '', // 提供水印图片的URL（watermarkImage）。上传后水印图片将出现在图片的中央。
         fileInputTitle: '请选择'
     };
 
@@ -81,7 +84,10 @@ function fileUpload(param) {
                         language: language,
                         fileType: option.fileType,
                         fileSize: option.fileSize,
+                        defaultWatermark: option.defaultWatermark,
                         maxImageSize: option.maxImageSize,
+                        watermarkText: option.watermarkText,
+                        watermarkImage: option.watermarkImage,
                         addScript: (button.style.transition === undefined ? 'true' : '')
                     },//后台参数 json格式
                     uuidName: 'uuid'
