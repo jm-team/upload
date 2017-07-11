@@ -12,12 +12,21 @@ var UPLOAD_FILE_TYPE_INFO = {
     'excel': ['.xls', '.xlsx', '.pdf']
 };
 
+// IE8/9下使用表单提交，需要设置特殊字段为true。后端将在返回的json后插入script，实现跨越
+var ADD_SCRIPT = document.documentMode && document.documentMode < 10
+    ? 'true'
+    : '';
+
 /**
- * 初始化uploadify上传
- * @param imgId 上传成功后 显示上传图片的 img标签的ID
- * @param filePathId 上传成功后 文件存储路径
- * @param webFilePath 文件服务主域名
- * @param fileType 文件类型 可选 ("file","image","doc") 多个可使用 "," 分隔
+ * 初始化upload上传
+ * @param param {object}
+ * uploadId     ID/HTMLElement
+ * imgId        上传成功后 显示上传图片的 img标签的ID
+ * filePathId   上传成功后 文件存储路径
+ * webFilePath  上传服务主域名
+ * webViewPath  文件服务主域名
+ * fileType     文件类型 可选 ("file","image","doc") 多个可使用 "," 分隔
+ * @returns {boolean}
  */
 function fileUpload(param) {
     var token = '';
@@ -55,16 +64,17 @@ function fileUpload(param) {
 
     var option = $.extend({}, defaults, param);
 
-
     var button = typeof option.uploadId === 'string'
         ? document.getElementById(option.uploadId)
         : option.uploadId;
 
-    if(!$(button).length) {
+    if (!$(button).length) {
         return false;
     }
     qq.log($(button)[0].nodeName, option.uploadId);
-    button = $(button)[0].nodeName.toLowerCase() === 'input' ? button.parentNode : button;
+    button = $(button)[0].nodeName.toLowerCase() === 'input'
+        ? button.parentNode
+        : button;
 
     $.getJSON('/getUploadToken?t=' + (+new Date()), function(data) {
         data = JSON.parse(data);
@@ -88,7 +98,7 @@ function fileUpload(param) {
                         maxImageSize: option.maxImageSize,
                         watermarkText: option.watermarkText,
                         watermarkImage: option.watermarkImage,
-                        addScript: (button.style.transition === undefined ? 'true' : '')
+                        addScript: ADD_SCRIPT
                     },//后台参数 json格式
                     uuidName: 'uuid'
                 },
@@ -97,27 +107,27 @@ function fileUpload(param) {
                 // element: document.getElementById(option.uploadId),
                 multiple: option.fileMulti,
                 text: {
-                    fileInputTitle: option.fileInputTitle,
+                    fileInputTitle: option.fileInputTitle
                 },
                 display: {
-                    prependFiles: true,
+                    prependFiles: true
                 },
                 failedUploadTextDisplay: {
-                    mode: 'custom',
+                    mode: 'custom'
                 },
                 retry: {
-                    enableAuto: false,
+                    enableAuto: false
                 },
                 chunking: {
-                    enabled: false,
+                    enabled: false
                 },
                 cors: {
                     allowXdr: true,
-                    expected: true,
+                    expected: true
                     // sendCredentials: true
                 },
                 resume: {
-                    enabled: false,
+                    enabled: false
                 },
                 callbacks: {
                     onError: function() {
@@ -129,7 +139,7 @@ function fileUpload(param) {
                         var queueID = id;
                         var fileObj = this.getFile(id) || {
                                 name: this.getName(id),
-                                size: this.getSize(id),
+                                size: this.getSize(id)
                             };
                         qq.log(fileObj);
 
@@ -225,42 +235,42 @@ function fileUpload(param) {
 }
 
 function validateFileType(fileObj, settings) {
-    var objType = '.'+ fileObj.name.toLowerCase().split('.').pop();
+    var objType = '.' + fileObj.name.toLowerCase().split('.').pop();
     var fileExt = settings.fileExt || '';
     var fileType = settings.fileType || 'image';
-    if(fileExt){
+    if (fileExt) {
         var ret = false;
         fileExt = fileExt.toLowerCase();
-        var extArr = fileExt.split(",");
-        for(var i=0;extArr && i<extArr.length;i++){
-            if(objType == extArr[i]) ret = true;
+        var extArr = fileExt.split(',');
+        for (var i = 0; extArr && i < extArr.length; i++) {
+            if (objType == extArr[i]) ret = true;
         }
-        if(!ret){
-            layer.alert("请上传文件类型为 "+fileExt+" 的文件", {icon: 2});
+        if (!ret) {
+            layer.alert('请上传文件类型为 ' + fileExt + ' 的文件', { icon: 2 });
             return false;
         }
         return ret;
-    } else if(fileType) {
+    } else if (fileType) {
         var fileTypes = fileType.split(',');
-        for(var i = 0; i < fileTypes.length; i++) {
+        for (var i = 0; i < fileTypes.length; i++) {
             var accepts = UPLOAD_FILE_TYPE_INFO[$.trim(fileTypes[i])];
-            if($.inArray(objType, accepts) >= 0) {
+            if ($.inArray(objType, accepts) >= 0) {
                 return true;
             }
         }
-        layer.alert("文件类型不正确", {icon: 2});
+        layer.alert('文件类型不正确', { icon: 2 });
         return false;
     } else {
         // 默认只允许图片
-        if(!$.inArray(objType, UPLOAD_FILE_TYPE_INFO['image']) >= 0){
-            layer.alert("文件类型不正确", {icon: 2});
+        if (!$.inArray(objType, UPLOAD_FILE_TYPE_INFO['image']) >= 0) {
+            layer.alert('文件类型不正确', { icon: 2 });
             return false;
         }
     }
     return true;
 }
 
-function isFunction(fn){
+function isFunction(fn) {
     return Object.prototype.toString.call(fn) === '[object Function]';
 }
 

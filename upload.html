@@ -22,7 +22,7 @@
         var WEB_VIEW_PATH = fileViewAddress;
     </script>
     <link rel="stylesheet" href="http://lg-center-static.jm.com/static/js/upload/upload.css"/>
-    <script src="./fine-uploader.core.min.js"></script>
+    <script src="./fine-uploader.core.js"></script>
     <script src="./upload.js"></script>
     <script src="./showImage.js"></script>
     <!-- uploadify end -->
@@ -35,7 +35,6 @@
             imgSrc = getFileViewUrl(imgSrc, false);
             if (imgSrc) {
                 var img = new Image();
-                img.src = imgSrc;
                 var layero = parent.layer ? parent.layer : layer;
                 img.onload = function() {
                     var wWidth = window.innerWidth * 0.9, wHeight = window.innerHeight * 0.9, width = img.width,
@@ -57,12 +56,14 @@
                         area: area,
                         skin: 'popimg-box', //没有背景色
                         shadeClose: true,
-                        content: '<img style="" src=' + imgSrc + ' />',
+                        content: '<img style="" src=' + imgSrc + ' />'
                     });
                 };
                 img.onerror = function(e) {
                     layero.msg('图片不存在', { time: 1000 });
                 };
+
+                img.src = imgSrc;
             }
         }
 
@@ -173,7 +174,7 @@
                     siblings('.poptip').
                     remove();
                 layer.alert('编辑成功回调');
-            },
+            }
         });
 
         //编辑图片控件 ，3个参数
@@ -182,14 +183,14 @@
         //param3:其它配置，参考upload.js
         var data = {
             filePaths: ['/newupload/www.jmdev.com/PC/2016/12/16/15/57/01/d625bdc87ba6ddf0-jm.jpg'],
-            originalFileNames: ['真实文件名'],
+            originalFileNames: ['真实文件名']
         };
         showImage('uploadFile1', data, {
             showEdit: true, // 显示编辑按钮
             showClear: true,
             callback: function(data, params) {
                 layer.alert('编辑成功回调');
-            },
+            }
         });
 
         //上传图片控件
@@ -198,7 +199,7 @@
 //      editable:false,
             fileMulti: true,
             editable: true,
-            max: 3,
+            max: 3
         });
 
         //上传文件
@@ -211,7 +212,7 @@
                 var inputText = $('#uploadifyText').closest('.file-upload-wrap').find('input:text');
                 inputText.val(realName);
                 inputText.attr('filePath', imagePath);
-            },
+            }
         });
     });
 
