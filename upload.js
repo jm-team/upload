@@ -12,7 +12,7 @@ var UPLOAD_FILE_TYPE_INFO = {
     'excel': ['.xls', '.xlsx', '.pdf']
 };
 
-// IE8/9下使用表单提交，需要设置特殊字段为true。后端将在返回的json后插入script，实现跨越
+// IE8/9下使用表单提交，需要设置特殊字段为true。后端将在返回的json后插入script，实现跨域
 var ADD_SCRIPT = document.documentMode && document.documentMode < 10
     ? 'true'
     : '';
@@ -42,15 +42,16 @@ function fileUpload(param) {
         webViewPath: window.WEB_VIEW_PATH || '',
         fileType: 'image',
         fileSize: 5,
-        ifyWidth: 50,
-        ifyHeight: 31,
         fileQueueAuto: true,
         fileMulti: false,
         maxImageSize: 200,
         fileExt: null,
         callback: null,
         onSelect: null,
+        onError: null,
         // 弃用api
+        ifyWidth: 50,
+        ifyHeight: 31,
         buttonImg: '',
         fileQueue: 'fileQueue',
         queueSizeLimit: 6,
@@ -86,7 +87,7 @@ function fileUpload(param) {
 
             new qq.FineUploaderBasic({
                 request: {
-                    endpoint: option.webFilePath + '/upload.do?action=upload',
+                    endpoint: option.endpoint || option.webFilePath + '/upload.do?action=upload',
                     params: {
                         moduleFlag: 'report',
                         token: token,
@@ -130,8 +131,11 @@ function fileUpload(param) {
                     enabled: false
                 },
                 callbacks: {
-                    onError: function() {
+                    onError: function(id, name, responseJSON, xhr) {
                         qq.log('=============onError', arguments);
+                        if (isFunction(option.onError)) {
+                            option.onError(this, id, name, responseJSON, xhr);
+                        }
                     },
                     // return false 不触发 onSubmitted 回调
                     onSubmit: function(id, name) {

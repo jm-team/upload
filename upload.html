@@ -27,6 +27,13 @@
     <script src="./showImage.js"></script>
     <!-- uploadify end -->
 
+    <!-- 富文本 start -->
+    <link href="http://center.jzx.com/static/dep/kindeditor/themes/default/default.css" rel="stylesheet" type="text/css">
+    <link href="http://center.jzx.com/static/css/kindeditor.css" type="text/css" rel="stylesheet"/>
+    <script src="./kindeditor-all-new.js"></script>
+    <script src="http://center.jzx.com/static/dep/kindeditor/editor_upload.js"></script>
+    <!-- 富文本 end -->
+
     <script type="text/javascript">
 
         //单张图片显示
@@ -160,6 +167,16 @@
         </div>
     </div>
 </div>
+
+<!-- 富文本 start -->
+<textarea id="descripe" name="descripe" style="width:910px; height:300px"></textarea>
+<input type="hidden" name="h_webFilePath" value="http://image.jm.com">
+<input type="hidden" name="h_webFileUploadPath" value="http://image5.jm.com">
+
+<script>
+    initEditor({el: "#descripe"});
+</script>
+<!-- 富文本 end -->
 </body>
 
 <script type="text/javascript">
@@ -206,6 +223,7 @@
         fileUpload({
             uploadId: 'uploadifyText',//组件id
             fileType: 'doc',//文件类型
+            fileExt: '.txt',//文件类型
             callback: function(data) {
                 var imagePath = data.filePaths[0];
                 var realName = data.originalFileNames[0];

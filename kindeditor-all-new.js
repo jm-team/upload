@@ -7931,7 +7931,7 @@ KindEditor.plugin('image', function(K) {
         formatUploadUrl = K.undef(self.formatUploadUrl, true),
         imageFileBasePath = K.undef(self.baseFilePath, ''),
         imageSizeLimit = K.undef(self.imageSizeLimit, '5MB'),
-        imageFileTypes = K.undef(self.imageFileTypes, '*.jpg;*.gif;*.png'),
+        imageFileTypes = K.undef(self.imageFileTypes, '.jpg,.gif,.png'),
         allowFileManager = K.undef(self.allowFileManager, false),
         uploadJson = K.undef(self.uploadJson,
             self.basePath + 'php/upload_json.php'),
@@ -8006,9 +8006,8 @@ KindEditor.plugin('image', function(K) {
             hiddenElements.join(''),
             '<label style="width:60px;">' + lang.localUrl + '</label>',
             '<input type="text" name="localUrl" class="ke-input-text" tabindex="-1" style="width:200px;" readonly="true" /> &nbsp;',
-            '<input type="button" id="ke-upload-button" class="ke-upload-button" value="' +
-            lang.upload + '" />',
-            //'<div class="ke-inline-block ke-upload-button"><div class="ke-upload-area" style="width: 60px;"><span class="ke-button-common"><input type="button" class="ke-button-common ke-button" value="浏览..."></span></div></div>',
+            '<span class="ke-button-common ke-button-outer"><input type="button" id="ke-upload-button" class="ke-button-common ke-button" value="' +
+            lang.upload + '" /></span>',
             '</div>',
             '</form>',
             '</div>',
@@ -8104,80 +8103,39 @@ KindEditor.plugin('image', function(K) {
         } else if (showLocal) {
             K('.tab2', div).show();
         }
-        /* comment by francklin 20161129
-         var uploadbutton = K.uploadbutton({
-         button : K('.ke-upload-button', div)[0],
-         fieldName : filePostName,
-         form : K('.ke-form', div),
-         target : target,
-         width: 60,
-         afterUpload : function(data) {
-         dialog.hideLoading();
-         if (data.error === 0) {
-         var url = data.url;
-         if (formatUploadUrl) {
-         url = K.formatUrl(url, 'absolute');
-         }
-         if (self.afterUpload) {
-         self.afterUpload.call(self, url, data, name);
-         }
-         if (!fillDescAfterUploadImage) {
-         clickFn.call(self, url, data.title, data.width, data.height, data.border, data.align);
-         } else {
-         K(".ke-dialog-row #remoteUrl", div).val(url);
-         K(".ke-tabs-li", div)[0].click();
-         K(".ke-refresh-btn", div).click();
-         }
-         } else {
-         alert(data.message);
-         }
-         },
-         afterError : function(html) {
-         dialog.hideLoading();
-         self.errorDialog(html);
-         }
-         });
-         uploadbutton.fileBox.change(function(e) {
-         localUrlBox.val(uploadbutton.fileBox.val());
-         });
-         */
         //added by francklin 20161129
+        var uploader = null;
+        var id = null;
         var uploadbutton = {
             ele: $('#ke-upload-button', div),
             file: null,
             init: function(para) {
-                this.ele.uploadify(para);
-                $('#ke-upload-button .uploadify-button', div).
-                    removeClass('uploadify-button');
+                fileUpload(para);
             },
             submit: function() {
-                this.ele.uploadify('upload');
+                uploader.retry(id);
             },
             cancel: function() {
                 localUrlBox.val('');
                 this.file = null;
-                this.ele.uploadify('cancel');
+                uploader.cancel(id);
             }
         };
+
         uploadbutton.init({
-            'swf': self.swf,
-            'uploader': uploadJson,
+            'endpoint': uploadJson,
             'formData': extraParams,
-            'buttonText': lang.upload,
-            'buttonClass': 'ke-button-common ke-button',
-            'queueID': '',
-            'fileTypeExts': imageFileTypes,
-            'fileTypeDesc': 'Image Files',
-            'auto': false,
-            'multi': false,
+            'uploadId': uploadbutton.ele[0],
+            'fileType': 'image',
+            'fileExt': imageFileTypes,
+            'fileQueueAuto': false,
+            'fileMulti': false,
             'width': 51,
             'height': 23,
-            'uploadLimit': 1,
-            'fileSizeLimit': imageSizeLimit,
-            'onDialogOpen': function() {
-                uploadbutton.cancel();
-            },
-            'onSelect': function(file) {
+            'onSelect': function(upload, queueID, file) {
+                uploader = upload;
+                id = queueID;
+
                 uploadbutton.file = file;
                 if (file.size > 5 * 1024 * 1024) {
                     alert('上传文件不允许大于' + imageSizeLimit);
@@ -8186,49 +8144,32 @@ KindEditor.plugin('image', function(K) {
                 }
                 localUrlBox.val(file.name);
             },
-            'onSelectError': function(file) {
-                alert('The file ' + file.name +
-                    ' returned an error and was not added to the queue.');
-            },
-            'onUploadSuccess': function(file, data, response) {
+            'callback': function(rData) {
                 dialog.hideLoading();
-                var obj = eval('(' + data + ')');
-                //现在拿到的是临时文件，需要再取一次
-                $.getJSON('/getFile?uuid=' + obj.fileUUIDs[0], function(rData) {
-                    var rData = (rData instanceof Object) ? rData : eval(
-                        '(' + rData + ')');
-                    //var rData = JSON.parse(data);
-                    if (rData && rData.resultCode == 4) {
-                        var url = rData.filePaths.pop() || '';
-                        if (imageFileBasePath) url = imageFileBasePath + url;
-                        if (formatUploadUrl) {
-                            url = K.formatUrl(url, 'absolute');
-                        }
-                        if (self.afterUpload) {
-                            self.afterUpload.call(self, url, rData, name);
-                        }
-                        if (!fillDescAfterUploadImage) {
-                            clickFn.call(self, url,
-                                rData.originalFileNames.pop() || '',
-                                rData.width, rData.height, rData.border,
-                                rData.align);
-                        } else {
-                            K('.ke-dialog-row #remoteUrl', div).val(url);
-                            K('.ke-tabs-li', div)[0].click();
-                            K('.ke-refresh-btn', div).click();
-                        }
-                    } else {
-                        alert(rData.returnMsg);
+
+                //var rData = JSON.parse(data);
+                if (rData && rData.resultCode == 4) {
+                    var url = rData.filePaths.pop() || '';
+                    if (imageFileBasePath) url = imageFileBasePath + url;
+                    if (formatUploadUrl) {
+                        url = K.formatUrl(url, 'absolute');
                     }
-                });
-            },
-            'onUploadError': function(file, errorCode, errorMsg, errorString) {
-                if (errorCode == -280) return;	//cancelled
-                dialog.hideLoading();
-                self.errorDialog('上传失败！');
-                console.log(
-                    'The file ' + file.name + ' could not be uploaded: ' +
-                    errorString);
+                    if (self.afterUpload) {
+                        self.afterUpload.call(self, url, rData, name);
+                    }
+                    if (!fillDescAfterUploadImage) {
+                        clickFn.call(self, url,
+                            rData.originalFileNames.pop() || '',
+                            rData.width, rData.height, rData.border,
+                            rData.align);
+                    } else {
+                        K('.ke-dialog-row #remoteUrl', div).val(url);
+                        K('.ke-tabs-li', div)[0].click();
+                        K('.ke-refresh-btn', div).click();
+                    }
+                } else {
+                    alert(rData.returnMsg);
+                }
             }
         });
         if (allowFileManager) {
@@ -8885,7 +8826,7 @@ KindEditor.plugin('media', function(K) {
                         //现在拿到的是临时文件，需要再取一次
                         $.getJSON('/getFile?uuid=' + data1.fileUUIDs[0],
                             function(dataStr) {
-                                var data2 = dataStr;//JSON.parse(dataStr);
+                                var data2 = JSON.parse(dataStr);//JSON.parse(dataStr);
                                 //added by francklin
                                 data = {
                                     error: data2.resultCode == 4 ? 0 : 1,
@@ -8898,8 +8839,9 @@ KindEditor.plugin('media', function(K) {
                                         : self.options.errorMessage);
                                     return;
                                 }
-                                if (self.options.fileBasePath) data.url = self.options.fileBasePath +
-                                    data.url;
+                                if (self.options.fileBasePath) {
+                                    data.url = self.options.fileBasePath + data.url;
+                                }
                                 file.url = data.url;
                                 K('.ke-img', itemDiv).
                                     attr('src', file.url).
@@ -8999,8 +8941,8 @@ KindEditor.plugin('multiimage', function(K) {
         uploadJson = K.undef(self.uploadJson,
             self.basePath + 'php/upload_json.php'),
         imgPath = self.pluginsPath + 'multiimage/images/',
-        imageSizeLimit = K.undef(self.imageSizeLimit, '1MB'),
-        imageFileTypes = K.undef(self.imageFileTypes, '*.jpg;*.gif;*.png'),
+        imageSizeLimit = K.undef(self.imageSizeLimit, '5MB'),
+        imageFileTypes = K.undef(self.imageFileTypes, '.jpg.gif;*.png'),
         imageFileBasePath = K.undef(self.baseFilePath, ''),
         imageUploadLimit = K.undef(self.imageUploadLimit, 20),
         filePostName = K.undef(self.filePostName, 'imgFile'),
