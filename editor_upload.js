@@ -16,7 +16,6 @@ function initEditor(param) {
 					language = data.language;
 					domain = data.domain;
 				    window.editor = K.create(param.el,{
-                        basePath: 'http://center.jzx.com/static/dep/kindeditor/',
 				    	items : [
 				    		'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
                             'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
