@@ -8132,8 +8132,8 @@ KindEditor.plugin('image', function(K) {
             'fileMulti': false,
             'width': 51,
             'height': 23,
-            'onSelect': function(upload, queueID, file) {
-                uploader = upload;
+            'onSelect': function(file, queueID, fileName, uploadInstance) {
+                uploader = uploadInstance;
                 id = queueID;
 
                 uploadbutton.file = file;
