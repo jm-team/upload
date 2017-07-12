@@ -67,13 +67,13 @@ function fileUpload(param) {
 
     var button = typeof option.uploadId === 'string'
         ? document.getElementById(option.uploadId)
-        : option.uploadId;
+        : $(option.uploadId)[0];  // jquery包装一层即可支持传递jquery包装的DOM
 
     if (!$(button).length) {
         return false;
     }
-    qq.log($(button)[0].nodeName, option.uploadId);
-    button = $(button)[0].nodeName.toLowerCase() === 'input'
+    qq.log(button.nodeName, option.uploadId);
+    button = button.nodeName.toLowerCase() === 'input'
         ? button.parentNode
         : button;
 
