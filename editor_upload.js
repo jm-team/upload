@@ -16,6 +16,7 @@ function initEditor(param) {
 					language = data.language;
 					domain = data.domain;
 				    window.editor = K.create(param.el,{
+                        basePath: 'http://center.jzx.com/static/dep/kindeditor/',
 				    	items : [
 				    		'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
                             'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
@@ -25,7 +26,7 @@ function initEditor(param) {
                             'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'upload', 'image', 'multiimage',
                             'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
                             'anchor', 'link', 'unlink', '|', 'about'],
-				    	swf: webRootPath+"/static/lib/uploadify/uploadify.swf",
+				    	// swf: webRootPath+"/static/lib/uploadify/uploadify.swf",
 				        resizeType: 1,
 				        //pasteType: 1, //粘贴无格式
 				        urlType: 'domain',
