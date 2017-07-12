@@ -39,8 +39,10 @@
         }
     </style>
     <script src="./kindeditor-all-new.js"></script>
-    <script src="./kindeditor.upload.js"></script>
-    <script src="./editor_upload.js"></script>
+    <!--<script src="./kindeditor.upload.js"></script>-->
+    <!--<script src="./editor_upload.js"></script>-->
+
+    <script src="http://center.jzx.com/static/dep/kindeditor/editor_upload.js"></script>
     <!-- 富文本 end -->
 
     <script type="text/javascript">
@@ -92,6 +94,12 @@
         });
     </script>
     <style>
+
+        .file-upload input[type='file']{
+             left: auto;
+             width: auto;
+        }
+
         input.file-btn, #uploadifyText {
             display: none;
         }
@@ -146,8 +154,18 @@
                     <div class="col-sm-10 p-t-sm">
                         <div class="input-group file-upload-wrap">
                             <input type="text" class="form-control" readonly placeholder="请上传doc docx pdf格式的文件"/>
-                            <a class="btn btn-primary btn-block file-upload input-group-addon"><input type="file"
-                                                                                                      id="uploadifyText"/>选择文件</a>
+                            <a class="btn btn-primary btn-block file-upload input-group-addon">
+                                <input type="file" id="uploadifyText"/> 选择文件
+                            </a>
+                        </div>
+                    </div>
+                    <label class="control-label col-sm-2">$(selector) button</label>
+                    <div class="col-sm-10 p-t-sm">
+                        <div class="input-group file-upload-wrap">
+                            <input type="text" class="form-control" readonly placeholder="请上传doc docx pdf格式的文件"/>
+                            <a class="btn btn-primary btn-block file-upload input-group-addon">
+                                <button type="button" id="uploadButton">选择文件</button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -196,7 +214,7 @@
         //上传图片控件
         showImage('uploadFile', null, {
             showClear: true, // 显示编辑按钮
-            callback: function(data, params) {
+            callback: function(data, id, name, uploader) {
                 $('#uploadFile').parent().
                     removeClass('red-border').
                     siblings('.poptip').
@@ -216,7 +234,7 @@
         showImage('uploadFile1', data, {
             showEdit: true, // 显示编辑按钮
             showClear: true,
-            callback: function(data, params) {
+            callback: function(data, id, name, uploader) {
                 layer.alert('编辑成功回调');
             }
         });
@@ -233,9 +251,22 @@
         //上传文件
         fileUpload({
             uploadId: 'uploadifyText',//组件id
+            fileType: 'doc',// 文件类型
+            fileExt: '.txt',// 目前不支持txt文件类型
+            callback: function(data, id, name, uploader) {
+                var imagePath = data.filePaths[0];
+                var realName = data.originalFileNames[0];
+                var inputText = $('#uploadifyText').closest('.file-upload-wrap').find('input:text');
+                inputText.val(realName);
+                inputText.attr('filePath', imagePath);
+            }
+        });
+
+        //上传文件
+        fileUpload({
+            uploadId: $('#uploadButton'),//组件id
             fileType: 'doc',//文件类型
-            fileExt: '.txt',//文件类型
-            callback: function(data) {
+            callback: function(data, id, name, uploader) {
                 var imagePath = data.filePaths[0];
                 var realName = data.originalFileNames[0];
                 var inputText = $('#uploadifyText').closest('.file-upload-wrap').find('input:text');

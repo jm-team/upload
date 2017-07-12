@@ -73,12 +73,13 @@ function fileUpload(param) {
         return false;
     }
     qq.log(button.nodeName, option.uploadId);
-    button = button.nodeName.toLowerCase() === 'input'
+    var buttonNodeName = button.nodeName.toLowerCase();
+    button = (buttonNodeName === 'input' || buttonNodeName === 'button')
         ? button.parentNode
         : button;
 
     $.getJSON('/getUploadToken?t=' + (+new Date()), function(data) {
-        data = JSON.parse(data);
+        data = typeof data === 'string' ? JSON.parse(data) : data;
 
         if (data.uploadToken) {
             token = data.uploadToken;
@@ -134,13 +135,12 @@ function fileUpload(param) {
                     onError: function(id, name, responseJSON, xhr) {
                         qq.log('=============onError', arguments);
                         if (isFunction(option.onError)) {
-                            option.onError(this, id, name, responseJSON, xhr);
+                            option.onError(responseJSON, id, name, this, xhr);
                         }
                     },
                     // return false 不触发 onSubmitted 回调
                     onSubmit: function(id, name) {
                         qq.log('=============onSubmit', arguments);
-                        var queueID = id;
                         var fileObj = this.getFile(id) || {
                                 name: this.getName(id),
                                 size: this.getSize(id)
@@ -151,7 +151,7 @@ function fileUpload(param) {
                         _fileObj.type = '.' + fileObj.name.split('.').pop();
 
                         if (isFunction(option.onSelect)) {
-                            var s = option.onSelect(this, queueID, fileObj);
+                            var s = option.onSelect(fileObj, id, name, this);
 
                             if (s == false) {
                                 return false;
@@ -192,6 +192,7 @@ function fileUpload(param) {
                     onComplete: function(id, name, responseJSON, xhr) {
                         qq.log('=============onComplete', arguments);
                         var obj = responseJSON;
+                        var self = this;
 
                         $.cookie('JSESSIONID', token);//跨域传输之后必须设置cookie 否则会丢失此次的session
 
@@ -207,11 +208,11 @@ function fileUpload(param) {
                             if (callback && callback != undefined && typeof callback === 'string') {
                                 callback = window[callback];
                                 if (typeof callback === 'function') {
-                                    callback.apply([], [obj]);
+                                    callback.apply([], [obj, id, name, self]);
                                 }
                             } else if (isFunction(callback)) {
                                 //判断是否是function
-                                callback(obj);
+                                callback(obj, id, name, self);
                             } else {
                                 //判断是否是图片格式
                                 if (!$.inArray(obj.type, UPLOAD_FILE_TYPE_INFO['image']) >= 0) {
@@ -229,7 +230,8 @@ function fileUpload(param) {
                             }
                         });
                     },
-                    onUpload: function() {
+                    // Called just before an item begins uploading to the server.
+                    onUpload: function(id, name) {
                         qq.log('=============onUpload', arguments);
                     }
                 }
