@@ -38,4 +38,4 @@
 2. editor_upload.js不变，initEditor中获取的token给批量上传使用，在fileUpload方法中获取的token给单独的上传使用（由于每次都初始化上传按钮，所以单独上传的token不会过期）
 
 ## 方案三
-> 使用百度富文本编辑器UEditor/UMEditor，webuploader判断支持H5上传就使用H5版，不支持就使用Flash上传
+> 结合方案一和方案二，保留方案一的上传按钮和原有的批量上传功能。用户自行选择哪个按钮进行图片上传。

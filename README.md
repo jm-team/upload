@@ -30,6 +30,7 @@
 |watermarkText   | 新增 | 提供水印文字（watermarkText）。上传后水印文字将出现在图片的正中 |
 |watermarkImage  | 新增 | 提供水印图片的URL（watermarkImage）。上传后水印图片将出现在图片的中央。 |
 |fileInputTitle  | 新增 | 按钮title, 默认为“请选择” 。 |
+|endpoint        | 新增 | 自定义上传路径 |
 |uploadId        | 修改 | Id或HTMLElement，如果是input自动使用其父元素，不能为行内元素。 |
 |fileExt         | 修改 | 替换`fileTypeExts`，格式为`.gif,.jpg,.png` |
 |webFilePath     | 修改 | 默认读取全局常量 WEB_FILE_PATH，用于统一配置上传服务器地址，不需要每次都传了，也可继续传参覆盖。 |
