@@ -30,6 +30,8 @@
     <!-- 富文本 start -->
     <link href="http://center.jzx.com/static/dep/kindeditor/themes/default/default.css" rel="stylesheet" type="text/css">
     <link href="http://center.jzx.com/static/css/kindeditor.css" type="text/css" rel="stylesheet"/>
+
+    <!-- 方案一 -->
     <style>
         .ke-icon-upload {
             background-image: url(http://center.jzx.com/static/dep/kindeditor/themes/default/default.png);
@@ -38,11 +40,16 @@
             height: 16px;
         }
     </style>
+    <!--<script src="./dep/kindeditor/kindeditor-all-o.js"></script>-->
+    <!--<script src="./dep/kindeditor/kindeditor.upload.js"></script>-->
+    <!--<script src="./dep/kindedieditor_upload-planA.jsA.js"></script>-->
+    <!-- 方案二 -->
+    <!--<script src="./dep/kindeditor/kindeditor-all-new.js"></script>-->
+    <!--<script src="http://center.jzx.com/static/dep/kindeditor/editor_upload.js"></script>-->
+    <!-- 方案一 方案二 demo -->
     <script src="./dep/kindeditor/kindeditor-all-new.js"></script>
     <script src="./dep/kindeditor/kindeditor.upload.js"></script>
-    <script src="./dep/kindeditor/editor_upload.js"></script>
-
-    <!--<script src="http://center.jzx.com/static/dep/kindeditor/editor_upload.js"></script>-->
+    <script src="http://center.jzx.com/static/dep/kindeditor/editor_upload.js"></script>
     <!-- 富文本 end -->
 
     <script type="text/javascript">
@@ -93,8 +100,9 @@
             });
         });
     </script>
-    <style>
 
+    <!-- jyt ui-fix -->
+    <style>
         .file-upload input[type='file']{
              left: auto;
              width: auto;
@@ -192,20 +200,49 @@
                 </div>
             </form>
         </div>
+
+
+
+        <!-- 富文本 start -->
+        <div class="box-header clearfix">
+            <h3 class="title">富文本 方案一</h3>
+        </div>
+        <div class="form-main">
+            <textarea id="descripe" name="descripe" style="width:910px; height:300px"></textarea>
+        </div>
+        <div class="box-header clearfix">
+            <h3 class="title">富文本 方案二</h3>
+        </div>
+        <div class="form-main">
+            <textarea id="descripe2" name="descripe2" style="width:910px; height:300px"></textarea>
+        </div>
+        <input type="hidden" name="h_webFilePath" value="http://image.jm.com">
+        <input type="hidden" name="h_webFileUploadPath" value="http://image5.jm.com">
+
+        <script>
+            // 方案一
+            var webFilePath = $("input[name='h_webFilePath']").val();
+            var webFileUploadPath = $("input[name='h_webFileUploadPath']").val();
+
+            KindEditor.create('#descripe',{
+                items : [
+                    'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'upload',
+                    'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+                    'anchor', 'link', 'unlink', '|', 'about'],
+                uploadJson: webFileUploadPath + "/upload.do?action=upload",
+                baseFilePath: webFilePath
+            });
+            initEditor({el: "#descripe2"});
+        </script>
+        <!-- 富文本 end -->
     </div>
 </div>
 
-<!-- 富文本 start -->
-<textarea id="descripe" name="descripe" style="width:910px; height:300px"></textarea>
-<textarea id="descripe2" name="descripe" style="width:910px; height:300px"></textarea>
-<input type="hidden" name="h_webFilePath" value="http://image.jm.com">
-<input type="hidden" name="h_webFileUploadPath" value="http://image5.jm.com">
-
-<script>
-    initEditor({el: "#descripe"});
-    initEditor({el: "#descripe2"});
-</script>
-<!-- 富文本 end -->
 </body>
 
 <script type="text/javascript">
