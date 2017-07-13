@@ -49,6 +49,7 @@ function fileUpload(param) {
         callback: null,
         onSelect: null,
         onError: null,
+        onComplete: null,
         // 弃用api
         ifyWidth: 50,
         ifyHeight: 31,
@@ -72,6 +73,7 @@ function fileUpload(param) {
     if (!$(button).length) {
         return false;
     }
+
     qq.log(button.nodeName, option.uploadId);
     var buttonNodeName = button.nodeName.toLowerCase();
     button = (buttonNodeName === 'input' || buttonNodeName === 'button')
@@ -153,7 +155,7 @@ function fileUpload(param) {
                         if (isFunction(option.onSelect)) {
                             var s = option.onSelect(fileObj, id, name, this);
 
-                            if (s == false) {
+                            if (s === false) {
                                 return false;
                             }
                         }
@@ -191,6 +193,15 @@ function fileUpload(param) {
                      */
                     onComplete: function(id, name, responseJSON, xhr) {
                         qq.log('=============onComplete', arguments);
+
+                        if (isFunction(option.onComplete)) {
+                            var s = option.onComplete(responseJSON, id, name, this, xhr);
+
+                            if (s === false) {
+                                return false;
+                            }
+                        }
+
                         var obj = responseJSON;
                         var self = this;
 

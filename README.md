@@ -35,8 +35,9 @@
 |fileExt         | 修改 | 替换`fileTypeExts`，格式为`.gif,.jpg,.png` |
 |webFilePath     | 修改 | 默认读取全局常量 WEB_FILE_PATH，用于统一配置上传服务器地址，不需要每次都传了，也可继续传参覆盖。 |
 |webViewPath     | 修改 | 默认读取全局常量 WEB_VIEW_PATH，用于统一配置查看图片服务器地址。 |
-|onError(errorReason, id, name, uploader)       | 新增 | errorReason为错误信息的字符串 |
-|onSelect(fileObj, id, name, uploader)      | 修改 | fileObj为包含文件名称和大小的file对象 |
+|onComplete(responseJSON, id, name, uploader, xhr)       | 新增 | 上传成功后的回调，注意**设置此回调`return false;`后，将不执行后续默认的处理逻辑**，包括`callback`回调 |
+|onError(errorReason, id, name, uploader, xhr)       | 新增 | errorReason为错误信息的字符串 |
+|onSelect(fileObj, id, name, uploader)      | 修改 | fileObj为包含文件名称和大小的file对象，注意**设置此回调`return false;`后，将不执行后续默认的处理逻辑** |
 |callback(resp, id, name, uploader)      | 修改 | resp包含上传成功返回的JSON和file对象, 注意resp对象不需要再次parse了~~var resp = $.parseJSON(resp);~~ |
 |buttonImg       | 弃用 | 按钮样式由用户定义 |
 |fileQueue       | 弃用 | 文件上传队列容器，没有交互需求 |
