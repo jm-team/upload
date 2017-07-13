@@ -198,7 +198,7 @@ function fileUpload(param) {
 
                         $.getJSON('/getFile?uuid=' + obj.fileUUIDs[0], function(data) {
                             var callback = option.callback;
-                            var obj = JSON.parse(data);
+                            var obj = typeof data === 'string' ? JSON.parse(data) : data;
 
                             obj.size = _fileObj.size;
                             obj.type = _fileObj.type;
