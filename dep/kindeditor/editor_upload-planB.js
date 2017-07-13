@@ -1,5 +1,5 @@
 
-function initEditor(param) {
+function initEditor2(param) {
     var webFilePath = $("input[name='h_webFilePath']").val();
     var webFileUploadPath = $("input[name='h_webFileUploadPath']").val();
 

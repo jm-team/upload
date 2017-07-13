@@ -1,5 +1,5 @@
 
-function initEditor(param) {
+function initEditor3(param) {
 	var timestamp = (new Date()).valueOf();
 	var token = "";
 	var language = "cn";
@@ -22,7 +22,7 @@ function initEditor(param) {
                             'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
                             'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
                             'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-                            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'upload', 'image', 'multiimage',
+                            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'upload', 'multiimage',
                             'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
                             'anchor', 'link', 'unlink', '|', 'about'],
 				    	// swf: webRootPath+"/static/lib/uploadify/uploadify.swf",
