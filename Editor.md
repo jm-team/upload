@@ -28,7 +28,7 @@
 	height: 16px;
   }
   ```
-4. editor_upload-planC.js，在initEditor中直接初始化富文本，添加参数`items`，加入'upload', 移除'image', 'multiimage'
+4. editor_upload-planB.js，在initEditor中直接初始化富文本，添加参数`items`，加入'upload', 移除'image', 'multiimage'
   ```js
   K.create(param.el,{
       items : ['...','upload', '...']
