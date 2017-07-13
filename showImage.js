@@ -91,7 +91,8 @@ function showImage(id, data, params){
                 $("#"+id).siblings('img').remove();
                 inputHidden.val('');
                 $(this).remove();
-                if($("#"+id).siblings('object').length == 0) {
+                // todo: 重复生成上传组件bug
+                if($("#"+id).siblings('input[qq-button-id]').length == 0) {
                     // 清除后上传组件未初始化的情况
                     showImage(id, null, params);
                 }
@@ -128,8 +129,8 @@ function showImageBtn(showImageHead, btn) {
         changePic = showImageHead.find('.change-pic');
     }
     var name = btn.name,
-        classes = btn.classes;
-    callback = btn.callback;
+        classes = btn.classes,
+        callback = btn.callback;
     var btnHtml = $('<em class="' + classes + '">' + name + '</em>');
     changePic.append(btnHtml);
     if(callback) {
@@ -152,6 +153,7 @@ function showImageEditBtn(id, showImageHead, params) {
         uploadId : randomId,
         callback : function(data){
             var editParams = $.extend({}, params, {max: 1});
+            var callback = editParams.callback;
             showImage(id, data, editParams);
             if(callback){
                 callback(data, editParams);
