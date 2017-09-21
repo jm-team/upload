@@ -4369,6 +4369,9 @@
             self._itemMap = {};
             self.div.addClass('ke-toolbar').
                 bind('contextmenu,mousedown,mousemove', function(e) {
+                    //by francklin 2017.09.21
+                    if(e.target&&e.target.type=="file") return;
+                    
                     e.preventDefault();
                 }).
                 attr('unselectable', 'on');

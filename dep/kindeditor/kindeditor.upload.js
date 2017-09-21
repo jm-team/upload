@@ -9,49 +9,52 @@ KindEditor.plugin('upload', function(K) {
         fillDescAfterUploadImage = K.undef(self.fillDescAfterUploadImage,
             false);
 
-    setTimeout(function() {
-        fileUpload({
-            'endpoint': uploadJson,
-            'formData': extraParams,
-            'uploadId': K('.ke-icon-upload', K(self.toolbar.div[0]))[0],
-            'fileType': 'image',
-            'fileExt': imageFileTypes,
-            'fileQueueAuto': true,
-            'fileMulti': true,
-            'callback': function(rData) {
+    var fn = self.plugin.upload = {
+        init: function(){
+            fileUpload({
+                'endpoint': uploadJson,
+                'formData': extraParams,
+                'uploadId': K('.ke-icon-upload', K(self.toolbar.div[0]))[0],
+                'fileType': 'image',
+                'fileExt': imageFileTypes,
+                'fileQueueAuto': true,
+                'fileMulti': true,
+                'callback': function(rData) {
 
-                //var rData = JSON.parse(data);
-                if (rData && rData.resultCode == 4) {
-                    var url = rData.filePaths.pop() || '';
-                    if (imageFileBasePath) url = imageFileBasePath + url;
-                    if (formatUploadUrl) {
-                        url = K.formatUrl(url, 'absolute');
-                    }
+                    //var rData = JSON.parse(data);
+                    if (rData && rData.resultCode == 4) {
+                        var url = rData.filePaths.pop() || '';
+                        if (imageFileBasePath) url = imageFileBasePath + url;
+                        if (formatUploadUrl) {
+                            url = K.formatUrl(url, 'absolute');
+                        }
 
-                    if (!fillDescAfterUploadImage) {
-                        clickFn.call(self, url,
-                            rData.originalFileNames.pop() || '',
-                            rData.width, rData.height, rData.border,
-                            rData.align);
+                        if (!fillDescAfterUploadImage) {
+                            clickFn.call(self, url,
+                                rData.originalFileNames.pop() || '',
+                                rData.width, rData.height, rData.border,
+                                rData.align);
+                        } else {
+                            K('.ke-dialog-row #remoteUrl', div).val(url);
+                            K('.ke-tabs-li', div)[0].click();
+                            K('.ke-refresh-btn', div).click();
+                        }
                     } else {
-                        K('.ke-dialog-row #remoteUrl', div).val(url);
-                        K('.ke-tabs-li', div)[0].click();
-                        K('.ke-refresh-btn', div).click();
+                        alert(rData.returnMsg);
                     }
-                } else {
-                    alert(rData.returnMsg);
                 }
-            }
-        });
-    })
-
-    function clickFn(url, title, width, height, border, align) {
-        self.exec('insertimage', url, title, width, height,
-            border, align);
-    }
-
+            });
+        },
+        click: function(url, title, width, height, border, align) {
+            self.exec('insertimage', url, title, width, height,
+                border, align);
+        }
+    };
     K.lang({
         upload : '上传'
+    });
+    self.afterCreate(function(){
+        fn.init();
     });
 });
 
