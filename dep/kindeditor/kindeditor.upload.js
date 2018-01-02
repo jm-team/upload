@@ -30,7 +30,7 @@ KindEditor.plugin('upload', function(K) {
                         }
 
                         if (!fillDescAfterUploadImage) {
-                            clickFn.call(self, url,
+                            fn.click.call(self, url,
                                 rData.originalFileNames.pop() || '',
                                 rData.width, rData.height, rData.border,
                                 rData.align);

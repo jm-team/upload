@@ -1,11 +1,11 @@
 /*******************************************************************************
 * KindEditor - WYSIWYG HTML Editor for Internet
-* Copyright (C) 2006-2016 kindsoft.net
+* Copyright (C) 2006-2017 kindsoft.net
 *
 * @author Roddy <luolonghao@gmail.com>
 * @website http://www.kindsoft.net/
 * @licence http://www.kindsoft.net/license.php
-* @version 4.1.11 (2016-03-31)
+* @version 4.1.12 (2017-04-12)
 *******************************************************************************/
 (function (window, undefined) {
 	if (window.KindEditor) {
@@ -19,7 +19,7 @@ if (!window.console) {
 if (!console.log) {
 	console.log = function () {};
 }
-var _VERSION = '4.1.11 (2016-03-31)',
+var _VERSION = '4.1.12 (2017-04-12)',
 	_ua = navigator.userAgent.toLowerCase(),
 	_IE = _ua.indexOf('msie') > -1 && _ua.indexOf('opera') == -1,
 	_NEWIE = _ua.indexOf('msie') == -1 && _ua.indexOf('trident') > -1,
@@ -86,10 +86,10 @@ function _removeUnit(val) {
 	return val && (match = /(\d+)/.exec(val)) ? parseInt(match[1], 10) : 0;
 }
 function _escape(val) {
-	return val.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+	return val.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 function _unescape(val) {
-	return val.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+	return val.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, '\'').replace(/&amp;/g, '&');
 }
 function _toCamel(str) {
 	var arr = str.split('-');
@@ -622,6 +622,7 @@ K.ctrl = _ctrl;
 K.ready = _ready;
 
 function _getCssList(css) {
+	css = css.replace(/&quot;/g, '"').replace(/&apos;/g, '\'');
 	var list = {},
 		reg = /\s*([\w\-]+)\s*:([^;]*)(;|$)/g,
 		match;
@@ -893,7 +894,8 @@ function _formatHtml(html, htmlTags, urlType, wellFormatted, indentChar) {
 				if (key === 'style' && val === '') {
 					return;
 				}
-				val = val.replace(/"/g, '&quot;');
+				//val = val.replace(/"/g, '&quot;');
+				val = val.replace(/'|"/g, '&apos;');
 				attr += ' ' + key + '="' + val + '"';
 			});
 		}
@@ -3520,7 +3522,7 @@ _extend(KWidget, {
 		return self;
 	},
 	autoPos : function(width, height) {
-		var self = this,
+		var x, y, self = this,
 			w = _removeUnit(width) || 0,
 			h = _removeUnit(height) || 0,
 			scrollPos = _getScrollPos();
@@ -5257,7 +5259,7 @@ KEditor.prototype = {
 		}
 		if (height) {
 			height = _removeUnit(height);
-			editHeight = _removeUnit(height) - self.toolbar.div.height() - self.statusbar.height();
+			var editHeight = _removeUnit(height) - self.toolbar.div.height() - self.statusbar.height();
 			editHeight = editHeight < self.minHeight ? self.minHeight : editHeight;
 			self.edit.setHeight(editHeight);
 			if (updateProp) {
@@ -5511,7 +5513,7 @@ KEditor.prototype = {
 function _editor(options) {
 	return new KEditor(options);
 }
-_instances = [];
+var _instances = [];
 function _create(expr, options) {
 	options = options || {};
 	options.basePath = _undef(options.basePath, K.basePath);
@@ -6383,6 +6385,9 @@ KindEditor.plugin('autoheight', function(K) {
 		body.style.overflowY = 'hidden';
 	}
 	function resetHeight() {
+		if(self.fullscreenMode){
+			return;
+		}
 		var edit = self.edit;
 		var body = edit.doc.body;
 		edit.iframe.height(minHeight);
@@ -6391,7 +6396,9 @@ KindEditor.plugin('autoheight', function(K) {
 	function init() {
 		minHeight = K.removeUnit(self.height);
 		self.edit.afterChange(resetHeight);
-		hideScroll();
+		if(!self.fullscreenMode){
+			hideScroll();
+		}
 		resetHeight();
 	}
 	if (self.isCreated) {
@@ -7259,7 +7266,6 @@ KindEditor.plugin('image', function(K) {
 			'<label style="width:60px;">' + lang.localUrl + '</label>',
 			'<input type="text" name="localUrl" class="ke-input-text" tabindex="-1" style="width:200px;" readonly="true" /> &nbsp;',
 			'<input type="button" id="ke-upload-button" class="ke-upload-button" value="' + lang.upload + '" />',
-			//'<div class="ke-inline-block ke-upload-button"><div class="ke-upload-area" style="width: 60px;"><span class="ke-button-common"><input type="button" class="ke-button-common ke-button" value="浏览..."></span></div></div>',
 			'</div>',
 			'</form>',
 			'</div>',
@@ -7371,7 +7377,7 @@ KindEditor.plugin('image', function(K) {
 		} else if (showLocal) {
 			K('.tab2', div).show();
 		}
-		/* comment by francklin 20161129
+		/*
 		var uploadbutton = K.uploadbutton({
 			button : K('.ke-upload-button', div)[0],
 			fieldName : filePostName,
@@ -8080,6 +8086,7 @@ K.extend(KSWFUpload, {
 				var itemDiv = K('div[data-id="' + file.id + '"]', self.bodyDiv).eq(0);
 				var data = {};
 				try {
+					//data = K.json(serverData);
 					var data1 = K.json(serverData);
 					//现在拿到的是临时文件，需要再取一次
 	                $.getJSON('/getFile?uuid='+data1.fileUUIDs[0],function(dataStr){
@@ -8102,6 +8109,15 @@ K.extend(KSWFUpload, {
 				} catch (e) {
 					self.options.afterError.call(this, '<!doctype html><html>' + serverData + '</html>');
 				}
+				/*
+				if (data.error !== 0) {
+					showError(itemDiv, K.DEBUG ? data.message : self.options.errorMessage);
+					return;
+				}
+				file.url = data.url;
+				K('.ke-img', itemDiv).attr('src', file.url).attr('data-status', file.filestatus).data('data', data);
+				K('.ke-status > div', itemDiv).hide();
+				*/
 			}
 		};
 		self.swfu = new SWFUpload(settings);
@@ -8340,6 +8356,7 @@ SWFUpload.completeURL = function(url) {
 	}
 	var currentURL = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "");
 	var indexSlash = window.location.pathname.lastIndexOf("/");
+	var path;
 	if (indexSlash <= 0) {
 		path = "/";
 	} else {
